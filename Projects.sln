@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "calcurator", "calcurator\calcurator.csproj", "{D03F7846-EFB8-4108-BBA7-3EE4A699622E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mines", "mines\mines.csproj", "{DD7094BF-F6EE-44CC-A054-A3B06945B87D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tictactoe", "tictactoe\tictactoe.csproj", "{578577F7-8325-443F-AA2E-F0EB7B18898D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D03F7846-EFB8-4108-BBA7-3EE4A699622E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D03F7846-EFB8-4108-BBA7-3EE4A699622E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D03F7846-EFB8-4108-BBA7-3EE4A699622E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D03F7846-EFB8-4108-BBA7-3EE4A699622E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD7094BF-F6EE-44CC-A054-A3B06945B87D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD7094BF-F6EE-44CC-A054-A3B06945B87D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD7094BF-F6EE-44CC-A054-A3B06945B87D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD7094BF-F6EE-44CC-A054-A3B06945B87D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{578577F7-8325-443F-AA2E-F0EB7B18898D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{578577F7-8325-443F-AA2E-F0EB7B18898D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{578577F7-8325-443F-AA2E-F0EB7B18898D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{578577F7-8325-443F-AA2E-F0EB7B18898D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BB560598-7019-4CB7-AC5E-97B7FC23B89D}
+	EndGlobalSection
+EndGlobal

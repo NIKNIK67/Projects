@@ -1,6 +1,5 @@
 
 using Microsoft.EntityFrameworkCore.SqlServer;
-using Microsoft.EntityFrameworkCore;
 
 namespace tictactoe
 {
@@ -13,20 +12,17 @@ namespace tictactoe
             
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
+            try
+            {
+                using (EFContext db = new EFContext())
+                {
+                    Game.DataProvider = new EFDataProvider();
+                }
+            }
+            catch (Exception ex)
+            { 
+                Game.DataProvider = new XMLDataProvider();
+            }
         }
-    }
-    public class ApplicationContext : DbContext
-    {
-        public DbSet<Player> Players { get; set; } = null!;
-        public ApplicationContext()
-        {
-            Database.EnsureCreated();
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer($@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-
-        }
-
     }
 }

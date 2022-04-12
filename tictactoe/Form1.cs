@@ -32,9 +32,7 @@ namespace tictactoe
             button.Text = "Start Game";
             button.Click += StartGame;
             List<Player> list;
-            using (ApplicationContext db = new ApplicationContext())
-            { list = db.Players.ToList(); }
-            list.Sort();
+            
             Label label = new Label();
             label.Text = "Enter your name";
             label.AutoSize = true;
@@ -45,6 +43,9 @@ namespace tictactoe
             table.Location = new Point(Convert.ToInt32(Size.Width * 0.1), Convert.ToInt32(Size.Height * 0.1));
             Controls.Add(table);
             Controls.Add(label);
+            using (EFContext db = new EFContext())
+            { list = db.Players.ToList(); }
+            list.Sort();
             List<int> Ids = new List<int>();
             List<string> Names = new List<string>();
             List<int> scores = new List<int>();
@@ -74,7 +75,7 @@ namespace tictactoe
         {
             string playerName = PlayerName.Text;
             Player CurrentPlayer;
-            using (ApplicationContext db = new ApplicationContext())
+            using (EFContext db = new EFContext())
             {
                 CurrentPlayer = PlayerManager.FindPlayerByName(db,playerName);
                 if (CurrentPlayer == null)

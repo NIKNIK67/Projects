@@ -8,7 +8,7 @@ namespace tictactoe
 {
     internal static class PlayerManager
     {
-        internal static Player FindPlayerByName(ApplicationContext db,string name)
+        internal static Player FindPlayerByName(EFContext db,string name)
         {
             foreach (Player player in db.Players)
             {
@@ -19,7 +19,7 @@ namespace tictactoe
             }
             return null;
         }
-        internal static Player FindPlayerById (ApplicationContext db, int id)
+        internal static Player FindPlayerById (EFContext db, int id)
         {
             foreach (Player player in db.Players)
             {
@@ -30,7 +30,7 @@ namespace tictactoe
             }
             return null;
         }
-        internal static Player FindPlayerByScore(ApplicationContext db, int score)
+        internal static Player FindPlayerByScore(EFContext db, int score)
         {
             foreach (Player player in db.Players)
             {
@@ -43,7 +43,7 @@ namespace tictactoe
         }
         internal static void AddScore(Player player, int count)
         {
-            using (ApplicationContext db = new ApplicationContext())
+            using (EFContext db = new EFContext())
             {
                 db.Players.Find(player.Id).Score += count;
                 db.SaveChanges();

@@ -16,6 +16,7 @@ namespace tictactoe
         private static Cordinate? nextStep;
         static bool found;
         public static Player CurrentPlayer;
+        public static IDataProvider DataProvider;
 
         internal static void Initilize(Form1 form) 
         {
@@ -30,7 +31,7 @@ namespace tictactoe
             TurnChange += StepAnalizer;
             TurnChange += AiTurn;
             TurnChange += ShowInConsole;
-            using(ApplicationContext db = new ApplicationContext())
+            using(EFContext db = new EFContext())
             { CurrentPlayer = PlayerManager.FindPlayerById(db,CurrentPlayer.Id); }
             Label label = new Label();
             label.Text = $"{CurrentPlayer.Name}: {CurrentPlayer.Score}";

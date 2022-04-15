@@ -9,20 +9,12 @@ namespace tictactoe
         [STAThread]
         static void Main()
         {
-            
+           
+                Game.DataProvider = new XMLDataProvider();
+           
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
-            try
-            {
-                using (EFContext db = new EFContext())
-                {
-                    Game.DataProvider = new EFDataProvider();
-                }
-            }
-            catch (Exception ex)
-            { 
-                Game.DataProvider = new XMLDataProvider();
-            }
+            
         }
     }
 }

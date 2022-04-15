@@ -31,8 +31,8 @@ namespace tictactoe
             TurnChange += StepAnalizer;
             TurnChange += AiTurn;
             TurnChange += ShowInConsole;
-            using(EFContext db = new EFContext())
-            { CurrentPlayer = PlayerManager.FindPlayerById(db,CurrentPlayer.Id); }
+
+            CurrentPlayer = DataProvider.FindPlayerById(CurrentPlayer.Id);
             Label label = new Label();
             label.Text = $"{CurrentPlayer.Name}: {CurrentPlayer.Score}";
             label.Location =new Point(0, 0);
@@ -122,14 +122,14 @@ namespace tictactoe
                                     if (button.State == 1 && trigger)
                                     {
                                         trigger = false;
-                                        PlayerManager.AddScore(CurrentPlayer, 1);
+                                        DataProvider.AddScore(CurrentPlayer, 1);
                                         ClearForm("You won");
                                         break;
                                     }
                                     if (button.State == 0 && trigger)
                                     {
                                         trigger = false;
-                                        PlayerManager.AddScore(CurrentPlayer, -1);
+                                        DataProvider.AddScore(CurrentPlayer, -1);
                                         ClearForm("You Lossed");
                                         
                                         break;

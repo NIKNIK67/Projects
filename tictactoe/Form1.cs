@@ -31,7 +31,7 @@ namespace tictactoe
             button.Size = new(Convert.ToInt32(Size.Width * 0.10), Convert.ToInt32(Size.Height * 0.1));
             button.Text = "Start Game";
             button.Click += StartGame;
-            List<Player> list;
+            List<Player>? list;
             
             Label label = new Label();
             label.Text = "Enter your name";
@@ -43,8 +43,7 @@ namespace tictactoe
             table.Location = new Point(Convert.ToInt32(Size.Width * 0.1), Convert.ToInt32(Size.Height * 0.1));
             Controls.Add(table);
             Controls.Add(label);
-            using (EFContext db = new EFContext())
-            { list = db.Players.ToList(); }
+            list = Game.DataProvider.GetPlayers();
             list.Sort();
             List<int> Ids = new List<int>();
             List<string> Names = new List<string>();
@@ -66,8 +65,7 @@ namespace tictactoe
                 ListViewItem item = new ListViewItem(new string[] { Ids[i].ToString(), Names[i], scores[i].ToString() });
                 table.Items.Add(item);
             }
-            
-            //    Console.WriteLine($"{player.Id} {player.Name} score: {player.Score}");
+         
 
         }
 
@@ -75,22 +73,15 @@ namespace tictactoe
         {
             string playerName = PlayerName.Text;
             Player CurrentPlayer;
-            using (EFContext db = new EFContext())
+            CurrentPlayer = Game.DataProvider.FindPlayerByName(playerName);
+            if (CurrentPlayer == null)
             {
-                CurrentPlayer = PlayerManager.FindPlayerByName(db,playerName);
-                if (CurrentPlayer == null)
-                {
-                    CurrentPlayer = new Player(playerName, 0);
-                    db.Players.Add(CurrentPlayer);
-                }
-                db.SaveChanges();
-                
+                CurrentPlayer = new Player(playerName, 0);
+                Game.DataProvider.AddPlayer(CurrentPlayer);
             }
             Controls.Clear();
             Game.CurrentPlayer = CurrentPlayer;
             Game.Initilize(this);
-
-
         }
 
         public System.ComponentModel.IContainer components;

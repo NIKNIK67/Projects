@@ -18,37 +18,82 @@ namespace tictactoe
     }
     public class XMLDataProvider : IDataProvider
     {
-        private FileStream stream = new FileStream("player.xml", FileMode.OpenOrCreate);
+        public XMLDataProvider()
+        { 
+            stream = new FileStream("player.xml", FileMode.OpenOrCreate);
+           
+        }
+        private FileStream stream;
         public void AddPlayer(Player player)
         {
-            XmlSerializer xml = new XmlSerializer(typeof(Player));
-            xml.Serialize(stream, player);
+            
+            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
+            List<Player> players =  xml.Deserialize(stream) as List<Player>;
+            players.Add(player);
+            xml.Serialize(stream, players);
+            
         }
 
         public void AddScore(Player player, int score)
         {
-           
+            
+            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
+            List<Player>? players = xml.Deserialize(stream) as List<Player>;
+            players.Where(x => x.Id == player.Id).FirstOrDefault().Score += score;
+            xml.Serialize(stream, players);
+            
         }
 
         public Player FindPlayerById(int id)
         {
-            throw new NotImplementedException();
+            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
+            List<Player>? players = xml.Deserialize(stream) as List<Player>;
+            return players.Where(x => x.Id == id).FirstOrDefault();
         }
 
         public Player FindPlayerByName(string name)
         {
-            throw new NotImplementedException();
+            
+            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
+            List<Player>? players = xml.Deserialize(stream) as List<Player>;
+            
+            return players?.Where(x => x.Name == name).FirstOrDefault();
+            
         }
 
         public Player FindPlayerByScore(int score)
         {
-            throw new NotImplementedException();
+            
+            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
+            List<Player>? players = xml.Deserialize(stream) as List<Player>;
+            
+            return players?.Where(x => x.Score == score).FirstOrDefault();
         }
 
         public List<Player> GetPlayers()
         {
-            throw new NotImplementedException();
+            
+            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
+            List<Player>? players;
+            try
+            {
+                players = xml.Deserialize(stream) as List<Player>;
+            }
+            catch (Exception ex)
+            {
+                players = new List<Player> { };
+
+
+            }
+            
+            return players;
         }
+        private void SerializeNew()
+        {
+            players = new List<Player> { };
+            xml.Serialize(stream, players);
+        }
+        
     }
     public class EFDataProvider : IDataProvider
     {

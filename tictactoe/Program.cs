@@ -9,9 +9,7 @@ namespace tictactoe
         [STAThread]
         static void Main()
         {
-           
-                Game.DataProvider = new XMLDataProvider();
-           
+            Game.DataProvider = new XmlDataProvider();
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
             

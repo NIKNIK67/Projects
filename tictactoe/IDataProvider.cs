@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace tictactoe
@@ -16,84 +17,162 @@ namespace tictactoe
         public Player FindPlayerByScore(int score);
         public void AddScore(Player player, int score);
     }
-    public class XMLDataProvider : IDataProvider
+    public class XmlDataProvider : IDataProvider
     {
-        public XMLDataProvider()
-        { 
-            stream = new FileStream("player.xml", FileMode.OpenOrCreate);
+        XmlDocument xDoc;
+        public XmlDataProvider()
+        {
+            xDoc = new XmlDocument();
+            if (!File.Exists("players.xml"))
+            {
+                
+                FileStream  stream = File.Create("players.xml");
+                stream.Close();
+            }
+            xDoc.Load("players.xml");
+            XmlElement xRoot = xDoc.DocumentElement;
+            if (xRoot == null)
+            {
+                xRoot = xDoc.CreateElement("players");
+                xDoc.AppendChild(xRoot);
+                xDoc.Save("players.xml");
+            }
+           
+            
            
         }
-        private FileStream stream;
         public void AddPlayer(Player player)
         {
-            
-            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
-            List<Player> players =  xml.Deserialize(stream) as List<Player>;
-            players.Add(player);
-            xml.Serialize(stream, players);
-            
+            xDoc.Load("players.xml");
+            XmlElement xRoot = xDoc.DocumentElement;
+            XmlElement xPlayer = xDoc.CreateElement("player");
+            XmlAttribute idAttribute = xDoc.CreateAttribute("id");
+            XmlElement xmlName = xDoc.CreateElement("name");
+            XmlElement xmlScore = xDoc.CreateElement("score");
+            XmlText idText = xDoc.CreateTextNode($"{xRoot.ChildNodes.Count}");
+            XmlText nameText = xDoc.CreateTextNode($"{player.Name}");
+            XmlText scoreText = xDoc.CreateTextNode($"{player.Score}");
+            idAttribute.AppendChild(idText);
+            xmlName.AppendChild(nameText);
+            xmlScore.AppendChild(scoreText);
+            xPlayer.Attributes.Append(idAttribute);
+            xPlayer.AppendChild(xmlName);
+            xPlayer.AppendChild(xmlScore);
+            xRoot.AppendChild(xPlayer);
+            xDoc.Save("players.xml");
+
         }
 
         public void AddScore(Player player, int score)
         {
-            
-            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
-            List<Player>? players = xml.Deserialize(stream) as List<Player>;
-            players.Where(x => x.Id == player.Id).FirstOrDefault().Score += score;
-            xml.Serialize(stream, players);
+            xDoc.Load("players.xml");
+            List<Player> list = GetPlayers();
+            XmlElement xRoot = xDoc.DocumentElement;
+            XmlNodeList nodes = xRoot.SelectNodes("*");
+            if (nodes.Count != 0 && nodes is not null)
+            {
+                foreach (XmlNode node in nodes)
+                {
+                    if (Convert.ToInt32(node.Attributes.GetNamedItem("id").Value) == player.Id)
+                    {
+                        foreach (XmlNode ChildNode in node.ChildNodes)
+                        {
+                            if (ChildNode.Name == "score")
+                            {
+                                ChildNode.InnerText = Convert.ToString(Convert.ToInt32(ChildNode.InnerText) + score);
+                                xDoc.Save("players.xml");
+                            }
+                        }
+                        
+                        
+                    }
+                }
+
+            }
             
         }
-
+       
         public Player FindPlayerById(int id)
         {
-            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
-            List<Player>? players = xml.Deserialize(stream) as List<Player>;
-            return players.Where(x => x.Id == id).FirstOrDefault();
+
+            xDoc.Load("players.xml");
+            List<Player> players = GetPlayers();
+            foreach (Player player in players)
+            {
+                if (player.Id == id)
+                {
+                    return player;
+                }
+            }
+            return null;
         }
 
         public Player FindPlayerByName(string name)
         {
-            
-            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
-            List<Player>? players = xml.Deserialize(stream) as List<Player>;
-            
-            return players?.Where(x => x.Name == name).FirstOrDefault();
-            
+            xDoc.Load("players.xml");
+            List<Player> players = GetPlayers();
+            foreach (Player player in players)
+            {
+                if (player.Name == name)
+                { 
+                    return player;
+                }
+            }
+            return null;
         }
 
         public Player FindPlayerByScore(int score)
         {
-            
-            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
-            List<Player>? players = xml.Deserialize(stream) as List<Player>;
-            
-            return players?.Where(x => x.Score == score).FirstOrDefault();
+            xDoc.Load("players.xml");
+            List<Player> players = GetPlayers();
+            foreach (Player player in players)
+            {
+                if (player.Score == score)
+                {
+                    return player;
+                }
+            }
+            return null;
         }
 
         public List<Player> GetPlayers()
         {
-            
-            XmlSerializer xml = new XmlSerializer(typeof(List<Player>));
-            List<Player>? players;
-            try
-            {
-                players = xml.Deserialize(stream) as List<Player>;
+            xDoc.Load("players.xml");
+            XmlElement xRoot = xDoc.DocumentElement;
+            XmlNodeList nodes = xRoot.SelectNodes("*");
+            if (nodes.Count != 0 && nodes is not null)
+            {   List<Player> result = new List<Player>();
+                foreach (XmlNode xmlNode in nodes)
+                {
+                    Player player = new Player();
+                    player.Id = Convert.ToInt32(xmlNode.Attributes.GetNamedItem("id").Value);
+                    foreach (XmlNode childNode in xmlNode.ChildNodes)
+                    {
+                        if (childNode.Name == "name")
+                        {
+                            player.Name = childNode.InnerText;
+                        }
+                        if (childNode.Name == "score")
+                        {
+                            player.Score = Convert.ToInt32(childNode.InnerText);
+
+                        }
+                    }
+                    result.Add (player);
+                   
+                        
+                }
+                return result;
             }
-            catch (Exception ex)
+            else
             {
-                players = new List<Player> { };
+                return new List<Player> { };
+            }
+            return new List<Player>() { };
+        }
 
 
-            }
-            
-            return players;
-        }
-        private void SerializeNew()
-        {
-            players = new List<Player> { };
-            xml.Serialize(stream, players);
-        }
-        
+
     }
     public class EFDataProvider : IDataProvider
     {

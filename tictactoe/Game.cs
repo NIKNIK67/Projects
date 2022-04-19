@@ -32,7 +32,7 @@ namespace tictactoe
             TurnChange += AiTurn;
             TurnChange += ShowInConsole;
 
-            CurrentPlayer = DataProvider.FindPlayerById(CurrentPlayer.Id);
+            CurrentPlayer = DataProvider.FindPlayerByName(CurrentPlayer.Name);
             Label label = new Label();
             label.Text = $"{CurrentPlayer.Name}: {CurrentPlayer.Score}";
             label.Location =new Point(0, 0);

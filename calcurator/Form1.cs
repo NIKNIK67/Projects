@@ -45,7 +45,8 @@ namespace calcurator
                 new ActionButton("*",3,2,this),
                 new ActionButton("c",0,3,this),
                 new ActionButton("0",1,3,this),
-                new ActionButton("=",2,3,this),
+                new ActionButton(".",2,3,this),
+                new ActionButton("=",0,4,4,this),
                 new ActionButton("/",3,3,this),
             };
             Label label = new Label();

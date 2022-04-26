@@ -15,9 +15,10 @@
             PosY=posY;
             State = -1;
             Connections = new List<FieldButton>();
-            Size = new Size(Convert.ToInt32(Game.MainForm?.Width*0.3), Convert.ToInt32(Game.MainForm?.Height*0.3));
-            Location = new Point(Convert.ToInt32(Game.MainForm.Width * 0.3*posX)+ Convert.ToInt32(Game.MainForm.Width*0.05)
-                       , Convert.ToInt32(Game.MainForm.Height * 0.3 * posY) + Convert.ToInt32(Game.MainForm.Height * 0.0125));
+            BackColor= Color.White;
+            Size = new Size(Convert.ToInt32(Game.MainForm?.Width*0.15), Convert.ToInt32(Game.MainForm?.Height*0.15));
+            Location = new Point(Convert.ToInt32(Game.MainForm.Width * 0.15*posX)+ Convert.ToInt32(Game.MainForm.Width*0.275)
+                       , Convert.ToInt32(Game.MainForm.Height * 0.15 * posY) + Convert.ToInt32(Game.MainForm.Height * 0.275));
             Show();
             Text = $"";
             Click += PlayerClick;

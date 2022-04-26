@@ -21,7 +21,8 @@ namespace tictactoe
         internal static List<FieldButton>? buttons;
         private static Cordinate? nextStep;
         static bool found;
-        public static Player CurrentPlayer;
+        public static Player FirstPlayer;
+        public static Player SecondPlayer;
         public static IDataProvider DataProvider;
         public static GameMode gameMode;
         internal static void InitilizeDuo(Form1 form)
@@ -34,6 +35,12 @@ namespace tictactoe
             TurnChange += NextTurn;
             TurnChange += Reload;
             TurnChange += CallCheckEnd;
+            Button exitButton = new Button();
+            exitButton.Location = new Point(Convert.ToInt32(MainForm.Size.Width * 0.4), Convert.ToInt32(MainForm.Size.Height * 0.80));
+            exitButton.Size = new Size(Convert.ToInt32(MainForm.Size.Width * 0.2), Convert.ToInt32(MainForm.Size.Height * 0.15));
+            MainForm.Controls.Add(exitButton);
+            exitButton.Text = "Exit";
+            exitButton.Click += OnExit;
             buttons = new List<FieldButton>();
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
@@ -43,6 +50,16 @@ namespace tictactoe
             foreach (FieldButton button in buttons)
                 button.InitializeConnections();
         }
+
+        private static void OnExit(object? sender, EventArgs e)
+        {
+            MainForm.Controls.Clear();
+            MainForm.InitializeComponent();
+            
+            
+
+        }
+
         internal static void InitilizeSolo(Form1 form)
         {
             gameMode = GameMode.Solo;
@@ -57,10 +74,15 @@ namespace tictactoe
             TurnChange += StepAnalizer;
             TurnChange += AiTurn;
             TurnChange += ShowInConsole;
-
-            CurrentPlayer = DataProvider.FindPlayerByName(CurrentPlayer.Name);
+            Button exitButton = new Button();
+            exitButton.Location = new Point(Convert.ToInt32(MainForm.Size.Width * 0.4), Convert.ToInt32(MainForm.Size.Height * 0.80));
+            exitButton.Size = new Size(Convert.ToInt32(MainForm.Size.Width * 0.2), Convert.ToInt32(MainForm.Size.Height * 0.15));
+            MainForm.Controls.Add(exitButton);
+            exitButton.Text = "Exit";
+            exitButton.Click += OnExit;
+            FirstPlayer = DataProvider.FindPlayerByName(FirstPlayer.Name);
             Label label = new Label();
-            label.Text = $"{CurrentPlayer.Name}: {CurrentPlayer.Score}";
+            label.Text = $"{FirstPlayer.Name}: {FirstPlayer.Score}";
             label.Location = new Point(0, 0);
             label.AutoSize = true;
             MainForm.Controls.Add(label);
@@ -154,14 +176,14 @@ namespace tictactoe
                                         if (button.State == 1 && trigger)
                                         {
                                             trigger = false;
-                                            DataProvider.AddScore(CurrentPlayer, 1);
+                                            DataProvider.AddScore(FirstPlayer, 1);
                                             ClearForm("You won");
                                             return 1;
                                         }
                                         if (button.State == 0 && trigger)
                                         {
                                             trigger = false;
-                                            DataProvider.AddScore(CurrentPlayer, -1);
+                                            DataProvider.AddScore(FirstPlayer, -1);
                                             ClearForm("You Lossed");
 
                                             return -1;

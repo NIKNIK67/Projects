@@ -31,7 +31,7 @@ namespace mines
         {
             if (e.Button == MouseButtons.Left && Control.ModifierKeys != Keys.Shift)
                 OpenField(new List<FieldButton>());
-            else if (e.Button == MouseButtons.Left && Control.ModifierKeys == Keys.Shift)
+            else if (e.Button == MouseButtons.Right && Control.ModifierKeys == Keys.Shift)
                 PlaceFlag();
                 
         }

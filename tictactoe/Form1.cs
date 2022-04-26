@@ -7,7 +7,7 @@ namespace tictactoe
         {
             InitializeComponent();
         }
-        private void InitializeComponent()
+        public void InitializeComponent()
         {
             this.Text = "TicTacToe";
             this.Size = new Size(Convert.ToInt32(Screen.PrimaryScreen.Bounds.Width * 0.75), Convert.ToInt32(Screen.PrimaryScreen.Bounds.Height * 0.75));
@@ -94,7 +94,7 @@ namespace tictactoe
                     Game.DataProvider.AddPlayer(CurrentPlayer);
                 }
                 Controls.Clear();
-                Game.CurrentPlayer = CurrentPlayer;
+                Game.FirstPlayer = CurrentPlayer;
                 Game.InitilizeSolo(this);
             }
             else if (senderButton.Text == "Start Duo Game")

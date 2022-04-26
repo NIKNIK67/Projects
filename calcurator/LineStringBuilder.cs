@@ -17,8 +17,13 @@ namespace calcurator
                 List<int> actionPos = new List<int>();
                 if (line.ToLower() == line && line.ToUpper() == line && line.Length != 0)
                 {
-                    DataTable dt = new DataTable();
-                    MainForm.box.Text = dt.Compute(MainForm.box.Text, "").ToString();
+                    try
+                    {
+                        DataTable dt = new DataTable();
+                        MainForm.box.Text = dt.Compute(MainForm.box.Text, "").ToString();
+                    }
+                    catch
+                    { MessageBox.Show("Enter right value in field"); }
                 }
                 else
                 {

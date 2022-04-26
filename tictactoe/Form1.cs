@@ -81,7 +81,11 @@ namespace tictactoe
             Button senderButton = sender as Button;
             if (senderButton.Text == "Start Solo Game")
             {
-                string playerName = PlayerName.Text;
+                string playerName;
+                if (PlayerName.Text.Length == 0 )
+                    playerName = "PlayerWithNoName";
+                else
+                    playerName = PlayerName.Text;
                 Player CurrentPlayer;
                 CurrentPlayer = Game.DataProvider.FindPlayerByName(playerName);
                 if (CurrentPlayer == null)

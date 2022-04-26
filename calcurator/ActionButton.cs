@@ -7,7 +7,7 @@
         public string Action { get; set; }
         private double widthArg = 0.2;
         private double heightArg = 0.2;
-        private double offsetBottom = 0.2;
+        private double offsetBottom = 0.1;
         private double offsetBorders = 0.1;
         public ActionButton(string action,int posX, int posY,Form form)
         {

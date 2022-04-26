@@ -21,7 +21,7 @@ namespace calcurator
             LineStringBuilder.MainForm = this;
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1000, 2000);
+            this.ClientSize = new System.Drawing.Size(Convert.ToInt32(Screen.PrimaryScreen.Bounds.Width*0.25),Convert.ToInt32(Screen.PrimaryScreen.Bounds.Height*0.35) );
             this.Text = "Form1";
             box = new TextBox();
             box.Location = new Point(0, 0);

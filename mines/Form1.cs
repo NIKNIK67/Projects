@@ -59,7 +59,7 @@ namespace mines
 
         private void action(object? sender, EventArgs e)
         {
-            if (int.TryParse(mines?.Text, out int _mines) && int.TryParse(fieldWidth?.Text, out int _width) && int.TryParse(fieldHeight?.Text,out int _height) && _mines < _width*_height)
+            if (int.TryParse(mines?.Text, out int _mines) && int.TryParse(fieldWidth?.Text, out int _width) && int.TryParse(fieldHeight?.Text,out int _height) && _mines < _width*_height && _mines > 0)
             {
                 Game.Initialze(_mines, _width, _height, this);
             }

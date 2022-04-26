@@ -72,10 +72,8 @@
         }
         private void PlayerClick(object? sender, EventArgs e)
         {
-            if (Game.turn)
-            {
-                Game.ChangeState(this);
-            }
+
+            Game.ChangeState(this);
         }
         
     }

@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace tictactoe
 {
+    internal enum GameMode
+    {
+        Solo,
+        Duo,
+    }
+
     internal static class Game
     {
         private static event Handler? TurnChange;
@@ -17,9 +23,29 @@ namespace tictactoe
         static bool found;
         public static Player CurrentPlayer;
         public static IDataProvider DataProvider;
-
-        internal static void Initilize(Form1 form) 
+        public static GameMode gameMode;
+        internal static void InitilizeDuo(Form1 form)
         {
+            gameMode = GameMode.Duo;
+            MainForm = form;
+            turn = true;
+            MainForm.Controls.Clear();
+            TurnChange = null;
+            TurnChange += NextTurn;
+            TurnChange += Reload;
+            TurnChange += CallCheckEnd;
+            buttons = new List<FieldButton>();
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                {
+                    buttons.Add(new FieldButton(i, j));
+                }
+            foreach (FieldButton button in buttons)
+                button.InitializeConnections();
+        }
+        internal static void InitilizeSolo(Form1 form)
+        {
+            gameMode = GameMode.Solo;
             MainForm = form;
             turn = true;
             found = false;
@@ -27,7 +53,7 @@ namespace tictactoe
             TurnChange = null;
             TurnChange += NextTurn;
             TurnChange += Reload;
-            TurnChange += CheckEnd;
+            TurnChange += CallCheckEnd;
             TurnChange += StepAnalizer;
             TurnChange += AiTurn;
             TurnChange += ShowInConsole;
@@ -35,11 +61,11 @@ namespace tictactoe
             CurrentPlayer = DataProvider.FindPlayerByName(CurrentPlayer.Name);
             Label label = new Label();
             label.Text = $"{CurrentPlayer.Name}: {CurrentPlayer.Score}";
-            label.Location =new Point(0, 0);
+            label.Location = new Point(0, 0);
             label.AutoSize = true;
             MainForm.Controls.Add(label);
             buttons = new List<FieldButton>();
-            nextStep = new Cordinate(-1,-1);
+            nextStep = new Cordinate(-1, -1);
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
                 {
@@ -48,40 +74,40 @@ namespace tictactoe
             foreach (FieldButton button in buttons)
                 button.InitializeConnections();
             foreach (FieldButton button in buttons)
-            { 
+            {
                 Console.Write($"Buttons connected with {button.PosX} {button.PosY} are  ");
                 foreach (FieldButton button1 in button.Connections)
                 {
                     Console.Write($"{button1.PosX} {button1.PosY}, ");
-                    
+
                 }
                 Console.WriteLine();
-               
+
             }
 
 
         }
         internal static void ShowInConsole()
         {
-            int[,] mas = new int[3,3];
+            int[,] mas = new int[3, 3];
             foreach (FieldButton button in buttons)
             {
-                mas[button.PosX,button.PosY] = button.State;
+                mas[button.PosX, button.PosY] = button.State;
             }
-           
-            for(int i = 0;i < 3;i++)
+
+            for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    Console.Write($"{mas[j, i]} "); 
+                    Console.Write($"{mas[j, i]} ");
                 }
                 Console.WriteLine();
             }
-            
+
         }
         internal static void ClearForm(string text)
         {
-           
+
             MainForm.Controls.Clear();
             Button button1 = new Button();
             button1.Text = text;
@@ -92,18 +118,22 @@ namespace tictactoe
         }
         private static void Button1_Click(object? sender, EventArgs e)
         {
-            Game.Initilize(MainForm);
+            if(gameMode == GameMode.Solo)
+                Game.InitilizeSolo(MainForm);
+            else if(gameMode == GameMode.Duo)
+                Game.InitilizeDuo(MainForm);
         }
-        internal static void CheckEnd()
+        internal static void CallCheckEnd() => CheckEnd();
+        internal static int CheckEnd()
         {
-            bool trigger =true;
-            int k=0;
+            bool trigger = true;
+            int k = 0;
             foreach (FieldButton button in buttons)
             {
                 if (button.State == -1)
                     k++;
             }
-            if(k==0)
+            if (k == 0)
             { ClearForm("Reset"); }
             foreach (FieldButton button in buttons)
             {
@@ -119,34 +149,54 @@ namespace tictactoe
                             {
                                 if ((button2.PosX == nextX && button2.PosY == nextY) && button2.State == button.State)
                                 {
-                                    if (button.State == 1 && trigger)
+                                    if (Game.gameMode == GameMode.Solo)
                                     {
-                                        trigger = false;
-                                        DataProvider.AddScore(CurrentPlayer, 1);
-                                        ClearForm("You won");
-                                        break;
+                                        if (button.State == 1 && trigger)
+                                        {
+                                            trigger = false;
+                                            DataProvider.AddScore(CurrentPlayer, 1);
+                                            ClearForm("You won");
+                                            return 1;
+                                        }
+                                        if (button.State == 0 && trigger)
+                                        {
+                                            trigger = false;
+                                            DataProvider.AddScore(CurrentPlayer, -1);
+                                            ClearForm("You Lossed");
+
+                                            return -1;
+                                        }
                                     }
-                                    if (button.State == 0 && trigger)
+                                    else if (Game.gameMode == GameMode.Duo)
                                     {
-                                        trigger = false;
-                                        DataProvider.AddScore(CurrentPlayer, -1);
-                                        ClearForm("You Lossed");
-                                        
-                                        break;
+                                        if (button.State == 1 && trigger)
+                                        {
+                                            trigger = false;
+                                            ClearForm("Player X Won");
+                                            return 1;
+                                        }
+                                        if (button.State == 0 && trigger)
+                                        {
+                                            trigger = false;
+                                            ClearForm("Player O Won");
+                                            return -1;
+                                        }
                                     }
+
                                 }
                             }
                         }
                     }
                 }
             }
+            return 0;
         }
         internal static void Reload()
         {
             foreach (FieldButton button in buttons)
             {
                 switch (button.State)
-                { 
+                {
                     case -1:
                         button.Text = "";
                         break;
@@ -180,7 +230,7 @@ namespace tictactoe
                                     if ((button2.PosX == nextX && button2.PosY == nextY) && button2.State == -1)
                                     {
                                         nextStep = new Cordinate(nextX, nextY);
-                                        
+
                                         found = true;
                                     }
                                 }
@@ -218,7 +268,7 @@ namespace tictactoe
                     }
 
                 }
-                else 
+                else
                 {
                     foreach (FieldButton button in buttons)
                     {
@@ -248,6 +298,7 @@ namespace tictactoe
 
         }
     }
+
 }
 
 

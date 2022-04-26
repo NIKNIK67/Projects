@@ -25,12 +25,19 @@ namespace tictactoe
             PlayerName.Name = "Field";
             PlayerName.Size = new Size(Convert.ToInt32(Size.Width * 0.30), Convert.ToInt32(Size.Height * 0.2));
             Button button = new Button();
-            button.Location = new Point(Convert.ToInt32(Size.Width * 0.45), Convert.ToInt32(Size.Height * 0.80));
+            button.Location = new Point(Convert.ToInt32(Size.Width * 0.35), Convert.ToInt32(Size.Height * 0.80));
             Controls.Add(button);
             button.Show();
             button.Size = new(Convert.ToInt32(Size.Width * 0.10), Convert.ToInt32(Size.Height * 0.1));
-            button.Text = "Start Game";
+            button.Text = "Start Solo Game";
             button.Click += StartGame;
+            Button button1 = new Button();
+            button1.Location = new Point(Convert.ToInt32(Size.Width * 0.55), Convert.ToInt32(Size.Height * 0.80));
+            Controls.Add(button1);
+            button1.Show();
+            button1.Size = new(Convert.ToInt32(Size.Width * 0.10), Convert.ToInt32(Size.Height * 0.1));
+            button1.Text = "Start Duo Game";
+            button1.Click += StartGame;
             List<Player>? list;
             
             Label label = new Label();
@@ -71,17 +78,27 @@ namespace tictactoe
 
         private void StartGame(object? sender, EventArgs e)
         {
-            string playerName = PlayerName.Text;
-            Player CurrentPlayer;
-            CurrentPlayer = Game.DataProvider.FindPlayerByName(playerName);
-            if (CurrentPlayer == null)
+            Button senderButton = sender as Button;
+            if (senderButton.Text == "Start Solo Game")
             {
-                CurrentPlayer = new Player(playerName, 0);
-                Game.DataProvider.AddPlayer(CurrentPlayer);
+                string playerName = PlayerName.Text;
+                Player CurrentPlayer;
+                CurrentPlayer = Game.DataProvider.FindPlayerByName(playerName);
+                if (CurrentPlayer == null)
+                {
+                    CurrentPlayer = new Player(playerName, 0);
+                    Game.DataProvider.AddPlayer(CurrentPlayer);
+                }
+                Controls.Clear();
+                Game.CurrentPlayer = CurrentPlayer;
+                Game.InitilizeSolo(this);
             }
-            Controls.Clear();
-            Game.CurrentPlayer = CurrentPlayer;
-            Game.Initilize(this);
+            else if (senderButton.Text == "Start Duo Game")
+            {
+                Controls.Clear();
+                Game.InitilizeDuo(this);
+            }
+            
         }
 
         public System.ComponentModel.IContainer components;

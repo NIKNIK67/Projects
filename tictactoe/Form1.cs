@@ -100,7 +100,7 @@ namespace tictactoe
             else if (senderButton.Text == "Start Duo Game")
             {
                 Controls.Clear();
-                Game.InitilizeDuo(this);
+                Game.InitilizeDuo(this, new Player("Player X", 0),new Player("Player O", 0));
             }
             
         }

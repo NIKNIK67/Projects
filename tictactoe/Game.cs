@@ -25,8 +25,10 @@ namespace tictactoe
         public static Player SecondPlayer;
         public static IDataProvider DataProvider;
         public static GameMode gameMode;
-        internal static void InitilizeDuo(Form1 form)
+        internal static void InitilizeDuo(Form1 form,Player firstPlayer,Player secondPlayer)
         {
+            FirstPlayer = firstPlayer;
+            SecondPlayer = secondPlayer;
             gameMode = GameMode.Duo;
             MainForm = form;
             turn = true;
@@ -41,6 +43,17 @@ namespace tictactoe
             MainForm.Controls.Add(exitButton);
             exitButton.Text = "Exit";
             exitButton.Click += OnExit;
+            Label player1 = new Label();
+            player1.Location = new Point(0, 0);
+            player1.AutoSize = true;
+            player1.Text = $"Player X: {FirstPlayer.Score}";
+            MainForm.Controls.Add(player1);
+            Label player2 = new Label();
+            player2.Location = new Point(0, Convert.ToInt32(MainForm.Size.Height * 0.05));
+            player2.AutoSize = true;
+            player2.Text = $"Player O: {SecondPlayer.Score}";
+            MainForm.Controls.Add(player2);
+            
             buttons = new List<FieldButton>();
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
@@ -143,7 +156,7 @@ namespace tictactoe
             if(gameMode == GameMode.Solo)
                 Game.InitilizeSolo(MainForm);
             else if(gameMode == GameMode.Duo)
-                Game.InitilizeDuo(MainForm);
+                Game.InitilizeDuo(MainForm,FirstPlayer,SecondPlayer);
         }
         internal static void CallCheckEnd() => CheckEnd();
         internal static int CheckEnd()
@@ -194,12 +207,14 @@ namespace tictactoe
                                         if (button.State == 1 && trigger)
                                         {
                                             trigger = false;
+                                            FirstPlayer.Score += 1;
                                             ClearForm("Player X Won");
                                             return 1;
                                         }
                                         if (button.State == 0 && trigger)
                                         {
                                             trigger = false;
+                                            SecondPlayer.Score += 1;
                                             ClearForm("Player O Won");
                                             return -1;
                                         }
@@ -236,9 +251,29 @@ namespace tictactoe
         }
         internal static void StepAnalizer()
         {
-            if (!found)
-                foreach (FieldButton button in buttons)
+            foreach (FieldButton button in buttons)
+            {   
+                if (!found)
                 {
+                    foreach (FieldButton button1 in button.Connections)
+                    {
+                        if (button1.State == -1 && button.State == 1)
+                        {
+                            int nextX = button1.PosX + button1.PosX - button.PosX;
+                            int nextY = button1.PosY + button1.PosY - button.PosY;
+                            if (nextX > -1 && nextY > -1 && nextX < 3 && nextY < 3)
+                            {
+                                foreach (FieldButton button2 in buttons)
+                                {
+                                    if ((button2.PosX == nextX && button2.PosY == nextY) && button2.State == button.State)
+                                    {
+                                        nextStep = new Cordinate(button1.PosX,button1.PosY);
+                                        found = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     foreach (FieldButton button1 in button.Connections)
                     {
                         if (button1.State == button.State && button.State == 1)
@@ -252,17 +287,15 @@ namespace tictactoe
                                     if ((button2.PosX == nextX && button2.PosY == nextY) && button2.State == -1)
                                     {
                                         nextStep = new Cordinate(nextX, nextY);
-
+            
                                         found = true;
                                     }
                                 }
-
                             }
-
-
                         }
                     }
-                }
+                } 
+            }
         }
         internal static void NextTurn()
         {
@@ -277,18 +310,26 @@ namespace tictactoe
             {
                 if (!found)
                 {
-
-                    foreach (FieldButton button in buttons)
-                    {
-
-                        if ((button?.State ?? 0) == -1)
+                    Random rand = new Random(DateTime.Now.Millisecond);
+                    List<int> unique = new List<int>();
+                    while (true)
+                    {   
+                        int a = rand.Next()%9;
+                        if (!unique.Contains(a) && buttons[a].State == -1)
                         {
-                            Console.WriteLine($"Make step on{button.PosX} {button.PosY}");
-                            ChangeState(button);
+                            Console.WriteLine($"Make step on{buttons[a].PosX} {buttons[a].PosY}");
+                            ChangeState(buttons[a]);
+                            break;
+                        }
+                        else if (!unique.Contains(a) && buttons[a].State != -1)
+                        { 
+                            unique.Add(a);
+                        }
+                        if (unique.Count >= 9)
+                        {
                             break;
                         }
                     }
-
                 }
                 else
                 {

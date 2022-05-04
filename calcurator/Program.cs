@@ -1,3 +1,5 @@
+using System.Threading;
+
 namespace calcurator
 {
     internal static class Program
@@ -8,8 +10,7 @@ namespace calcurator
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            Thread.CurrentThread.CurrentCulture =new System.Globalization.CultureInfo("en-US");
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }

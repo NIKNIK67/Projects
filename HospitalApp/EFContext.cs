@@ -19,7 +19,8 @@ namespace HospitalApp
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer($@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=1;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            
+            optionsBuilder.UseSqlServer($@"Data Source=LAPTOP-J0HNFQ96\SQLEXPRESS;Initial Catalog=master;Integrated Security=True");
             optionsBuilder.LogTo(message => System.Diagnostics.Debug.WriteLine(message),Microsoft.Extensions.Logging.LogLevel.Error);
            
         }

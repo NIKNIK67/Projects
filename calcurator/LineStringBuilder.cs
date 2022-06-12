@@ -1,5 +1,4 @@
 ﻿using System.Data;
-
 namespace calcurator
 {
     public static class LineStringBuilder
@@ -23,8 +22,9 @@ namespace calcurator
                         MainForm.box.Text = dt.Compute(MainForm.box.Text, "").ToString();
                     }
                     catch
-                    { MessageBox.Show("Enter right value in field"); }
-                }
+                    {
+                        MessageBox.Show("Enter right value in field"); }
+                    }
                 else
                 {
                     MainForm.box.Text = "Wrong input";
